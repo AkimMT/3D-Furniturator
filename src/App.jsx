@@ -64,9 +64,11 @@ export default function App() {
   const [sel, setSel] = useState(DEFAULT_SELECTION);
   const [buildKey, setBuildKey] = useState(0);
   const captureRef = useRef(null);
+  const [spinning, setSpinning] = useState(true);
+
 
   const setTop = (key, value) => setSel((s) => ({ ...s, [key]: value }));
-
+  
   const { rows, subtitle, title } = useMemo(() => describe(sel), [sel]);
   const currentModel = getModel(sel.model);
   const isStool = currentModel.kind === 'stool';
@@ -112,11 +114,21 @@ export default function App() {
               minDistance={isStool ? 1.7 : 1.4}
               maxDistance={isStool ? 4.2 : 3.6}
               maxPolarAngle={Math.PI / 2 - 0.05}
+              autoRotate={spinning}
+              autoRotateSpeed={1.2}
+              onStart={() => setSpinning(false)}
+
             />
             <Capture apiRef={captureRef} />
           </Canvas>
         </div>
         <p className="stage-hint">Tempkite norėdami pasukti, slinkite norėdami priartinti</p>
+        <div className="stage-footer">
+  <p className="stage-hint">Tempkite norėdami pasukti, slinkite norėdami priartinti</p>
+  <button type="button" className="btn-quiet spin-toggle" onClick={() => setSpinning((s) => !s)}>
+    {spinning ? 'Sustabdyti sukimąsi' : 'Atnaujinti rotaciją'}
+  </button>
+</div>
       </div>
 
       <aside className="panel">
